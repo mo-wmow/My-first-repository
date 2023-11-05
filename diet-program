@@ -1,0 +1,125 @@
+print("사용자의 기본 정보를 저장합니다.")
+
+weight = input("몸무게를 입력하세요. 숫자만 입력할 수 있습니다.")
+while True:
+  try:
+    weight = int(weight)
+    break
+  except:
+    weight = input("조건에 맞게 다시 입력하세요.")
+
+height = input("키를 입력하세요.숫자만 입력하세요.")
+while True:
+  try:
+    height = int(height)
+    break
+  except:
+    height = input("조건에 맞게 다시 입력하세요.")
+
+age = input("만 나이를 입력하세요. 숫자만 입력하세요.")
+while True:
+  try:
+    age = int(age)
+    break
+  except:
+    age = input("조건에 맞게 다시 입력하세요.")
+
+sex = input("성별을 입력하세요. Woman/Man의 형식으로 입력하세요.")
+while sex not in ["Woman", "Man"]:
+  sex = input("조건에 맞게 다시 입력하세요.")
+
+if sex == "Woman":
+  b_m = 655.1 + (9.56 * weight) + (1.85 * height) - (4.68 * age)
+else:
+  b_m = 66.47 + (13.75 * weight) + (5 * height) - (6.76 * age)
+
+active_general = 0
+active_exercise = 0
+
+active_type = input("일반 활동 계수를 계산합니다. 당신은 평소 어떤 타입입니까? 숫자로 입력하세요.\n1. 주로 앉아서 생활한다.\n2. 회사원 등 어느 정도 규칙적인 생활을 한다.\n3. 육체노동자 등 신체 활동이 많다.")
+while True:
+  try:
+    active_type = int(active_type)
+    break
+  except:
+    active_type = input("조건에 맞게 다시 입력하세요.")
+
+if active_type == 1:
+  active_general = 1.3
+elif active_type == 2:
+  active_general = 1.5
+else:
+  active_general = 1.7
+
+exercise = input("운동 활동 계수를 계산합니다. 당신은 일주일에 몇 번 운동을 하십니까? 0~7 사이의 숫자로 입력하세요.")
+while True:
+  try:
+    exercise = int(exercise)
+    if exercise in range(8):
+      break
+    else:
+      exercise = input("0~7 사이의 정수로 입력하세요.")
+  except:
+    exercise = input("0~7 사이의 정수로 입력하세요.")
+
+if exercise == 0:
+  active_exercise = 0
+elif exercise in list(range(1, 4)):
+  active_exercise = 0.1
+elif exercise in list(range(4, 7)):
+  active_exercise = 0.2
+else:
+  active_exercise = 0.3
+
+need_kcal = round(b_m * (active_general + active_exercise), 1)
+diet_kcal = round(need_kcal * 0.85, 1)
+
+print(f"당신의 1일 적정 섭취 칼로리는 {need_kcal}kcal이며, 다이어트 시 필요한 적정 섭취 칼로리는 {diet_kcal}kcal입니다!")
+
+food_info = {
+                  "쌀밥":310,
+                  "삶은 달걀":68,
+                  "사과":57,
+                  "계란프라이": 57,
+                  "배추김치":25,
+                  "바나나":93,
+                  "찐고구마":277.31,
+                  "잡곡밥":292.6,
+                  "군고구마":124,
+                  "현미밥":321
+            }
+
+eat = ""
+eat_kcal = 0
+more_food = ""
+more_food_kcal = 0
+
+for eating_time in ['아침', '점심', '저녁']:
+  print(f"<{eating_time}>")
+  print(f"음식 목록: {list(food_info.keys())}")
+  while True:
+    eat = input("당신이 먹은 음식을 목록 내에서 입력하세요. 멈추고 싶다면 끝을 입력하세요. 목록에 먹은 음식이 없을 경우 추가를 입력하세요.")
+    if eat in list(food_info.keys()):
+      eat_kcal = eat_kcal + food_info[eat]
+    elif eat == "추가":
+      more_food = input("새로운 음식의 이름을 입력하세요.")
+      more_food_kcal = input("새로운 음식의 칼로리를 입력하세요.")
+      while True:
+        try:
+          more_food_kcal = int(more_food_kcal)
+          break
+        except:
+          more_food_kcal = input("칼로리를 정수로 입력하세요")
+      print(f"당신이 먹은 음식에 {more_food}(이)가 추가되었습니다.")
+      food_info[more_food] = more_food_kcal
+      eat_kcal = eat_kcal + food_info[more_food]
+      print(f"음식 목록: {list(food_info.keys())}")
+    elif eat == "끝":
+      break
+    else:
+      print("조건에 맞게 다시 입력하세요.")
+
+if eat_kcal > diet_kcal:
+  print('실패했습니다.')
+else:
+  print('성공했습니다!')
